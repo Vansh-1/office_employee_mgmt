@@ -18,7 +18,7 @@ $totDept = (int)$conn->query("SELECT COUNT(*) FROM departments")->fetchColumn();
 $pendingLeaves = 0;
 $annCount = 0;
 try {
-    $pendingLeaves = (int)$conn->query("SELECT COUNT(*) FROM leaves WHERE status='pending'")->fetchColumn();
+    $pendingLeaves = (int)$conn->query("SELECT COUNT(*) FROM leaves WHERE status='Pending'")->fetchColumn();
 } catch (Throwable $e) {}
 try {
     $annCount = (int)$conn->query("SELECT COUNT(*) FROM announcements")->fetchColumn();
@@ -105,6 +105,7 @@ try {
     <nav class="mt-2">
         <a class="nav-link active" href="admin_dashboard.php"><i class="bi bi-speedometer2"></i> Dashboard</a>
         <a class="nav-link" href="manage_employees.php"><i class="bi bi-people-fill"></i> Manage Employees</a>
+        <a class="nav-link" href="manage_leaves.php"><i class="bi bi-calendar-check"></i> Manage Leave Applications</a>
         <a class="nav-link" href="attendance.php"><i class="bi bi-clipboard-check-fill"></i> Attendance</a>
         <a class="nav-link" href="payslips.php"><i class="bi bi-cash-coin"></i> Payslips</a>
         <a class="nav-link" href="generate_payslip.php"><i class="bi bi-file-earmark-text-fill"></i> Generate Payslip</a>
@@ -207,15 +208,16 @@ try {
                     </div>
                     <div class="d-grid gap-2 mt-3 quick-actions">
                         <a href="manage_employees.php" class="btn btn-primary"><i class="bi bi-person-badge"></i> Manage Employees</a>
+                        <a href="manage_leaves.php" class="btn btn-info text-white"><i class="bi bi-calendar-check"></i> Manage Leave Applications</a>
                         <a href="payslips.php" class="btn btn-success"><i class="bi bi-receipt"></i> View Payslips</a>
-                        <a href="generate_payslip.php" class="btn btn-info text-white"><i class="bi bi-file-earmark-plus"></i> Create Payslip</a>
+                        <a href="generate_payslip.php" class="btn btn-secondary"><i class="bi bi-file-earmark-plus"></i> Create Payslip</a>
                         <a href="announcements.php" class="btn btn-warning"><i class="bi bi-megaphone"></i> Post Announcement</a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Announcements (optional simple list) -->
+        <!-- Announcements -->
         <div class="row g-4 mt-1">
             <div class="col-12">
                 <div class="panel">
@@ -233,10 +235,8 @@ try {
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Mobile sidebar toggle
     function toggleSidebar(){
-        const sb = document.getElementById('sidebar');
-        sb.classList.toggle('show');
+        document.getElementById('sidebar').classList.toggle('show');
     }
 </script>
 </body>

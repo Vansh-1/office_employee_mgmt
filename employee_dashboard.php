@@ -92,6 +92,8 @@ $emp = $stmt->fetch(PDO::FETCH_ASSOC);
   <a href="employee_dashboard.php"><i class="bi bi-house-fill"></i> Dashboard</a>
   <a href="attendance.php"><i class="bi bi-clipboard-check-fill"></i> My Attendance</a>
   <a href="payslips.php"><i class="bi bi-cash-coin"></i> My Payslips</a>
+  <a href="my_leaves.php"><i class="bi bi-calendar-check-fill"></i> My Leaves</a>
+  <a href="apply_leave.php"><i class="bi bi-pencil-square"></i> Apply for Leave</a>
   <a href="announcements.php"><i class="bi bi-megaphone-fill"></i> Announcements</a>
   <a href="logout.php" class="text-warning"><i class="bi bi-box-arrow-right"></i> Logout</a>
 </div>
@@ -132,15 +134,30 @@ $emp = $stmt->fetch(PDO::FETCH_ASSOC);
         </div>
       </div>
 
+      <!-- Leaves with Two Buttons -->
       <div class="col-md-4">
         <div class="card card-custom text-center p-4">
           <div class="card-body">
-            <i class="bi bi-megaphone-fill fs-1 text-warning"></i>
-            <h5 class="mt-3">Announcements</h5>
-            <a href="announcements.php" class="btn btn-warning mt-2">View Updates</a>
+            <i class="bi bi-calendar-check-fill fs-1 text-info"></i>
+            <h5 class="mt-3">Leaves</h5>
+            <div class="d-grid gap-2">
+              <a href="leaves.php" class="btn btn-info">My Leaves</a>
+              <a href="apply_leave.php" class="btn btn-warning">Apply Leave</a>
+            </div>
           </div>
         </div>
       </div>
+
+      <div class="col-md-4">
+        <div class="card card-custom text-center p-4">
+          <div class="card-body">
+            <i class="bi bi-megaphone-fill fs-1 text-danger"></i>
+            <h5 class="mt-3">Announcements</h5>
+            <a href="announcements.php" class="btn btn-danger mt-2">View Updates</a>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
