@@ -105,7 +105,7 @@ try {
     <nav class="mt-2">
         <a class="nav-link active" href="admin_dashboard.php"><i class="bi bi-speedometer2"></i> Dashboard</a>
         <a class="nav-link" href="manage_employees.php"><i class="bi bi-people-fill"></i> Manage Employees</a>
-        <a class="nav-link" href="manage_leaves.php"><i class="bi bi-calendar-check"></i> Manage Leave Applications</a>
+        <a class="nav-link" href="manage_leaves.php"><i class="bi bi-calendar-check"></i> Manage Leave</a>
         <a class="nav-link" href="attendance.php"><i class="bi bi-clipboard-check-fill"></i> Attendance</a>
         <a class="nav-link" href="payslips.php"><i class="bi bi-cash-coin"></i> Payslips</a>
         <a class="nav-link" href="generate_payslip.php"><i class="bi bi-file-earmark-text-fill"></i> Generate Payslip</a>
