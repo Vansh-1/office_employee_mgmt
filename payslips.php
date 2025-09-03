@@ -29,13 +29,21 @@ if (isset($_SESSION['employee'])) {
         $params[] = $_GET['employee_id'];
     }
 
-    if (isset($_GET['month_year']) && $_GET['month_year'] != '') {
-        $dateParts = explode("-", $_GET['month_year']);
-        $year = intval($dateParts[0]);
-        $month = intval($dateParts[1]); // numeric month 1-12
-        $where[] = "p.year = ? AND p.month = ?";
-        $params[] = $year;
-        $params[] = $month;
+    if (isset($_GET['year']) && $_GET['year'] != '') {
+        $year = intval($_GET['year']);
+        // Restrict only between 2020–2021
+        if ($year >= 2020 && $year <= 2021) {
+            $where[] = "p.year = ?";
+            $params[] = $year;
+        }
+    }
+
+    if (isset($_GET['month']) && $_GET['month'] != '') {
+        $month = intval($_GET['month']);
+        if ($month >= 1 && $month <= 12) {
+            $where[] = "p.month = ?";
+            $params[] = $month;
+        }
     }
 
     $sql = "SELECT p.id, p.month, p.year, p.salary AS amount, p.file_path, e.name
@@ -148,9 +156,34 @@ if (isset($_SESSION['employee'])) {
                         ?>
                     </select>
                 </div>
-                <div class="col-md-3">
-                    <input type="month" name="month_year" class="form-control" value="<?= $_GET['month_year'] ?? '' ?>">
+
+                <!-- Year Filter (2020–2021 only) -->
+                <div class="col-md-2">
+                    <select name="year" class="form-select">
+                        <option value="">All Years</option>
+                        <?php 
+                        for ($y = 2020; $y <= 2021; $y++) {
+                            $selected = (isset($_GET['year']) && $_GET['year'] == $y) ? 'selected' : '';
+                            echo "<option value='$y' $selected>$y</option>";
+                        }
+                        ?>
+                    </select>
                 </div>
+
+                <!-- Month Filter -->
+                <div class="col-md-2">
+                    <select name="month" class="form-select">
+                        <option value="">All Months</option>
+                        <?php 
+                        for ($m = 1; $m <= 12; $m++) {
+                            $monthName = date("F", mktime(0, 0, 0, $m, 1));
+                            $selected = (isset($_GET['month']) && $_GET['month'] == $m) ? 'selected' : '';
+                            echo "<option value='$m' $selected>$monthName</option>";
+                        }
+                        ?>
+                    </select>
+                </div>
+
                 <div class="col-md-3">
                     <button type="submit" class="btn btn-primary">Filter</button>
                     <a href="payslips.php" class="btn btn-secondary">Reset</a>

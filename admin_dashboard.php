@@ -108,7 +108,6 @@ try {
         <a class="nav-link" href="manage_leaves.php"><i class="bi bi-calendar-check"></i> Manage Leave</a>
         <a class="nav-link" href="attendance.php"><i class="bi bi-clipboard-check-fill"></i> Attendance</a>
         <a class="nav-link" href="payslips.php"><i class="bi bi-cash-coin"></i> Payslips</a>
-        <a class="nav-link" href="generate_payslip.php"><i class="bi bi-file-earmark-text-fill"></i> Generate Payslip</a>
         <a class="nav-link" href="announcements.php"><i class="bi bi-megaphone-fill"></i> Announcements</a>
         <a class="nav-link" href="logout.php"><i class="bi bi-box-arrow-right"></i> Logout</a>
     </nav>
