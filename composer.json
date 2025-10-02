@@ -1,0 +1,8 @@
+{
+  "name": "office/employee-mgmt",
+  "description": "Office Employee Management System",
+  "type": "project",
+  "require": {
+    "dompdf/dompdf": "^2.0"
+  }
+}
