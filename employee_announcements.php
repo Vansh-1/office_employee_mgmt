@@ -15,6 +15,8 @@ $empId = $_SESSION['user_id'];
 <head>
 <meta charset="UTF-8">
 <title>Announcements - Employee</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
 <style>
@@ -39,41 +41,54 @@ body { background: #f4f6f9; padding: 30px; font-family: 'Segoe UI', Tahoma, Gene
 
 <script>
 const empId = <?= json_encode($empId) ?>;
+let lastTs = null;
 
-function fetchAnnouncements() {
-    fetch('fetch_announcements.php?emp_id=' + empId)
-    .then(res => res.json())
-    .then(data => {
-        const container = document.getElementById('announcements-container');
-        container.innerHTML = '';
-        if(data.length === 0){
-            container.innerHTML = '<p class="text-muted">No announcements yet.</p>';
-            return;
-        }
-        data.forEach(a => {
-            const unreadClass = a.unread ? 'unread' : '';
-            const badge = a.unread ? '<span class="badge bg-primary ms-2">New</span>' : '';
-            const card = `
-                <div class="card card-announcement ${unreadClass}">
-                    <div class="card-header">
-                        ${a.title} ${badge}
-                    </div>
-                    <div class="card-body">
-                        ${a.message.replace(/\n/g, '<br>')}
-                        <div class="text-end text-muted mt-2">${a.date}</div>
-                    </div>
-                </div>
-            `;
-            container.innerHTML += card;
-        });
-    });
+function render(items, replace = false){
+  const container = document.getElementById('announcements-container');
+  if (replace) container.innerHTML = '';
+  if (!items || items.length === 0) {
+    if (container.children.length === 0) {
+      container.innerHTML = '<p class="text-muted">No announcements yet.</p>';
+    }
+    return;
+  }
+  const frag = document.createDocumentFragment();
+  items.forEach(a => {
+    const wrap = document.createElement('div');
+    const unreadClass = a.unread ? 'unread' : '';
+    const badge = a.unread ? '<span class="badge bg-primary ms-2">New</span>' : '';
+    wrap.innerHTML = `
+      <div class="card card-announcement ${unreadClass}">
+        <div class="card-header">${a.title} ${badge}</div>
+        <div class="card-body">
+          ${a.message.replace(/\n/g, '<br>')}
+          <div class="text-end text-muted mt-2">${a.date}</div>
+        </div>
+      </div>`;
+    frag.appendChild(wrap.firstElementChild);
+  });
+  // Prepend newer items
+  container.insertBefore(frag, container.firstChild);
+}
+
+async function fetchAnnouncements(initial=false) {
+  const url = new URL('fetch_announcements.php', location.href);
+  url.searchParams.set('emp_id', empId);
+  if (lastTs) url.searchParams.set('since', lastTs);
+  const res = await fetch(url.toString(), { cache: 'no-store' });
+  const data = await res.json();
+  if (initial) {
+    render(data.items, true);
+  } else {
+    render(data.items, false);
+  }
+  if (data.lastTs) lastTs = data.lastTs;
 }
 
 // Initial fetch
-fetchAnnouncements();
-
-// Fetch every 10 seconds
-setInterval(fetchAnnouncements, 10000);
+fetchAnnouncements(true);
+// Poll every 15s for new
+setInterval(()=>fetchAnnouncements(false), 15000);
 </script>
 </body>
 </html>
