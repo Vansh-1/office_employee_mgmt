@@ -22,17 +22,23 @@ if ($role === 'admin') {
     $employees = $empStmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-// Build query
+// Build query (date range to leverage indexes)
 $params = [];
+// Compute start/end of selected month
+$yearNum = (int)$yearFilter;
+$monthNum = (int)$monthFilter;
+$startDate = sprintf('%04d-%02d-01', $yearNum, $monthNum);
+$endDate = (new DateTimeImmutable($startDate))->modify('+1 month')->format('Y-m-d');
+
 $query = "SELECT e.name, 
                  SUM(CASE WHEN a.status='Present' THEN 1 ELSE 0 END) AS present_days,
                  SUM(CASE WHEN a.status='Absent' THEN 1 ELSE 0 END) AS absent_days,
                  SUM(CASE WHEN a.status='Leave' THEN 1 ELSE 0 END) AS leave_days
           FROM attendance a
           JOIN employees e ON a.emp_id = e.id
-          WHERE YEAR(a.date)=? AND MONTH(a.date)=?";
-$params[] = $yearFilter;
-$params[] = $monthFilter;
+          WHERE a.date >= ? AND a.date < ?";
+$params[] = $startDate;
+$params[] = $endDate;
 
 // Apply employee filter (admin only)
 if ($role==='admin' && !empty($empFilter)) {
@@ -67,6 +73,8 @@ $months = [
 <head>
 <meta charset="UTF-8">
 <title>Attendance Summary</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
 body { background:#eef2f7; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
@@ -157,6 +165,6 @@ h2 { font-weight:700; }
 </div>
 
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
